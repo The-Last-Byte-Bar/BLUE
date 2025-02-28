@@ -6,7 +6,9 @@ which often provide higher-level aggregated data about blockchain entities.
 """
 
 import aiohttp
+import os
 from typing import Dict, Any, List, Optional
+from dotenv import load_dotenv
 
 from .client import BlockchainClient
 from .models import Block, Transaction, Address
@@ -15,7 +17,7 @@ from .models import Block, Transaction, Address
 class ExplorerClient(BlockchainClient):
     """Client for interaction with a blockchain explorer API."""
 
-    def __init__(self, base_url: str, api_key: Optional[str] = None):
+    def __init__(self, base_url: str = None, api_key: Optional[str] = None):
         """
         Initialize the explorer client.
 
@@ -23,6 +25,13 @@ class ExplorerClient(BlockchainClient):
             base_url: Base URL for the blockchain explorer API
             api_key: Optional API key for authentication
         """
+        # Load environment variables
+        load_dotenv()
+        
+        # Use provided base_url or get from environment variables
+        base_url = base_url or os.getenv('EXPLORER_API_URL', 'https://api.ergoplatform.com')
+        api_key = api_key or os.getenv('EXPLORER_API_KEY')
+        
         super().__init__(base_url, api_key)
         self.session = None
 
@@ -82,9 +91,9 @@ class ExplorerClient(BlockchainClient):
         # Try to parse as integer (height) or use as hash
         try:
             block_param = int(block_id)
-            data = await self._make_request("api/blocks", {"height": block_param})
+            data = await self._make_request("api/v1/blocks", {"height": block_param})
         except ValueError:
-            data = await self._make_request(f"api/blocks/{block_id}")
+            data = await self._make_request(f"api/v1/blocks/{block_id}")
         
         return Block.from_json(data)
 
@@ -98,7 +107,7 @@ class ExplorerClient(BlockchainClient):
         Returns:
             Transaction object
         """
-        data = await self._make_request(f"api/transactions/{tx_id}")
+        data = await self._make_request(f"api/v1/transactions/{tx_id}")
         return Transaction.from_json(data)
 
     async def get_address(self, address: str) -> Address:
@@ -111,8 +120,14 @@ class ExplorerClient(BlockchainClient):
         Returns:
             Address object
         """
-        data = await self._make_request(f"api/addresses/{address}")
-        return Address.from_json(data)
+        # Use the v0 API endpoint which we confirmed is working
+        data = await self._make_request(f"api/v0/addresses/{address}")
+        # Prepare the data for the Address model
+        address_data = {
+            'address': address,
+            'transactionsCount': data.get('transactions', {}).get('confirmed', 0)
+        }
+        return Address.from_json(address_data)
 
     async def get_balance(self, address: str) -> Dict[str, float]:
         """
@@ -124,8 +139,31 @@ class ExplorerClient(BlockchainClient):
         Returns:
             Dictionary mapping asset IDs to amounts
         """
-        data = await self._make_request(f"api/addresses/{address}/balance")
-        return {asset['id']: asset['amount'] for asset in data.get('assets', [])}
+        # Use the working endpoint for balance information
+        data = await self._make_request(f"api/v1/addresses/{address}/balance/confirmed")
+        tokens = {}
+        
+        # Extract tokens
+        for token in data.get('tokens', []):
+            tokens[token.get('tokenId')] = token.get('amount')
+            
+        # Add nanoErgs as a special asset
+        tokens['nanoErgs'] = data.get('nanoErgs', 0)
+        
+        return tokens
+
+    async def get_address_total_balance(self, address: str) -> Dict[str, Any]:
+        """
+        Get the total balance for an address, including confirmed and unconfirmed.
+
+        Args:
+            address: Blockchain address
+
+        Returns:
+            Dictionary with balance information including nanoErgs and tokens
+        """
+        data = await self._make_request(f"api/v1/addresses/{address}/balance/total")
+        return data
 
     async def submit_transaction(self, transaction_data: Dict[str, Any]) -> str:
         """
@@ -137,8 +175,21 @@ class ExplorerClient(BlockchainClient):
         Returns:
             Transaction ID if successful
         """
-        # Some explorers don't support transaction submission, so default to a NotImplementedError
-        raise NotImplementedError("Transaction submission not supported by explorer client")
+        session = await self._get_session()
+        headers = {'Content-Type': 'application/json'}
+        
+        if self.api_key:
+            headers['api_key'] = self.api_key
+        
+        url = f"{self.base_url.rstrip('/')}/api/v1/mempool/transactions/submit"
+        
+        async with session.post(url, json=transaction_data, headers=headers) as response:
+            if response.status >= 400:
+                error_text = await response.text()
+                raise Exception(f"Transaction submission error ({response.status}): {error_text}")
+            
+            result = await response.json()
+            return result.get('id')
 
     async def get_network_status(self) -> Dict[str, Any]:
         """
@@ -147,7 +198,7 @@ class ExplorerClient(BlockchainClient):
         Returns:
             Dictionary with network status information
         """
-        return await self._make_request("api/network/status")
+        return await self._make_request("api/v1/info")
     
     async def get_rich_list(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         """
@@ -160,10 +211,10 @@ class ExplorerClient(BlockchainClient):
         Returns:
             List of address data
         """
-        data = await self._make_request("api/addresses/rich", {"limit": limit, "offset": offset})
+        data = await self._make_request("api/v1/addresses/rich", {"limit": limit, "offset": offset})
         return data.get('items', [])
     
-    async def get_transactions_for_address(self, address: str, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+    async def get_transactions_for_address(self, address: str, limit: int = 50, offset: int = 0, concise: bool = False) -> List[Dict[str, Any]]:
         """
         Get transactions for a specific address.
 
@@ -171,9 +222,27 @@ class ExplorerClient(BlockchainClient):
             address: Blockchain address
             limit: Maximum number of transactions to return
             offset: Offset for pagination
+            concise: Whether to return concise transaction data (True) or full data (False)
 
         Returns:
             List of transaction data
         """
-        data = await self._make_request(f"api/addresses/{address}/transactions", {"limit": limit, "offset": offset})
+        params = {"limit": limit, "offset": offset}
+        if concise:
+            params["concise"] = "true"
+            
+        data = await self._make_request(f"api/v1/addresses/{address}/transactions", params)
+        return data.get('items', [])
+    
+    async def get_unspent_outputs(self, address: str) -> List[Dict[str, Any]]:
+        """
+        Get unspent outputs (UTXOs) for a specific address.
+
+        Args:
+            address: Blockchain address
+
+        Returns:
+            List of UTXO data
+        """
+        data = await self._make_request(f"api/v1/addresses/{address}/boxes/unspent")
         return data.get('items', []) 

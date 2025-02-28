@@ -9,9 +9,9 @@ import logging
 import asyncio
 from datetime import datetime, timedelta
 
-from .processor import DataSource
-from ..blockchain.client import BlockchainClient
-from ..blockchain.models import Block, Transaction, Address
+from data.processor import DataSource
+from blockchain.client import BlockchainClient
+from blockchain.models import Block, Transaction, Address
 
 logger = logging.getLogger(__name__)
 

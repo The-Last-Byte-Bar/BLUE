@@ -11,8 +11,8 @@ import re
 import asyncio
 from datetime import datetime, timedelta
 
-from .processor import DataSource
-from ..llm.client import LLMClient
+from data.processor import DataSource
+from llm.client import LLMClient
 
 logger = logging.getLogger(__name__)
 
