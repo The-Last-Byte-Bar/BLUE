@@ -8,4 +8,18 @@ blockchain analytics.
 
 __version__ = '0.1.0'
 
-from .wallet_insights import get_wallet_insights, answer_wallet_question 
+# Import client classes
+from .client import LLMClient, ClaudeClient, OllamaClient, LLMClientFactory
+
+# Import wallet insights (legacy)
+from .wallet_insights import get_wallet_insights, answer_wallet_question
+
+# Import blockchain analysis
+from .analysis import (
+    BlockchainAnalyzer, 
+    ContextBuilder,
+    analyze_wallet,
+    analyze_transaction,
+    analyze_network,
+    forensic_analysis
+) 
