@@ -11,6 +11,9 @@ __version__ = '0.1.0'
 # Import client classes
 from .client import LLMClient, ClaudeClient, OllamaClient, LLMClientFactory
 
+# Import sync wrapper
+from .llm import get_llm_client, SyncLLMClient
+
 # Import wallet insights (legacy)
 from .wallet_insights import get_wallet_insights, answer_wallet_question
 

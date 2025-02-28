@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logo Generator</title>
+</head>
+<body>
+    <h1>Logo Generator</h1>
+    <canvas id="canvas192" width="192" height="192"></canvas>
+    <a id="download192" download="logo192.png">Download logo192.png</a>
+    <br><br>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+    <a id="download512" download="logo512.png">Download logo512.png</a>
+
+    <script>
+        // Generate 192x192 logo
+        const canvas192 = document.getElementById('canvas192');
+        const ctx192 = canvas192.getContext('2d');
+        
+        // Background
+        ctx192.fillStyle = '#7CBDEC';
+        ctx192.fillRect(0, 0, 192, 192);
+        
+        // Text
+        ctx192.fillStyle = 'white';
+        ctx192.font = 'bold 48px Arial';
+        ctx192.textAlign = 'center';
+        ctx192.textBaseline = 'middle';
+        ctx192.fillText('BLUE', 96, 96);
+        
+        // Border
+        ctx192.strokeStyle = '#005A9C';
+        ctx192.lineWidth = 6;
+        ctx192.strokeRect(0, 0, 192, 192);
+        
+        // Create download link
+        const download192 = document.getElementById('download192');
+        download192.href = canvas192.toDataURL('image/png');
+        
+        // Generate 512x512 logo
+        const canvas512 = document.getElementById('canvas512');
+        const ctx512 = canvas512.getContext('2d');
+        
+        // Background
+        ctx512.fillStyle = '#7CBDEC';
+        ctx512.fillRect(0, 0, 512, 512);
+        
+        // Text
+        ctx512.fillStyle = 'white';
+        ctx512.font = 'bold 128px Arial';
+        ctx512.textAlign = 'center';
+        ctx512.textBaseline = 'middle';
+        ctx512.fillText('BLUE', 256, 256);
+        
+        // Border
+        ctx512.strokeStyle = '#005A9C';
+        ctx512.lineWidth = 16;
+        ctx512.strokeRect(0, 0, 512, 512);
+        
+        // Create download link
+        const download512 = document.getElementById('download512');
+        download512.href = canvas512.toDataURL('image/png');
+    </script>
+</body>
+</html> 

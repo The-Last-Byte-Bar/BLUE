@@ -1,11 +1,14 @@
-# Python bytecode files
+# Environment variables
+.env
+.env.bak/
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-
-# Distribution / packaging
+env/
 build/
 develop-eggs/
 dist/
@@ -21,14 +24,49 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
-# Virtual environments
 venv/
-env/
-ENV/
+.venv/
+venv.bak/
+.conda/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+coverage/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# Docker
+.docker/
+
+# Data
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+*.log.*
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Distribution / packaging
 .env
-.venv
-env.bak/
+.env.bak/
 venv.bak/
 .conda/
 .python-version
@@ -47,8 +85,6 @@ coverage.xml
 .hypothesis/
 
 # Logs and data files
-logs/
-*.log
 *.log.*
 log/
 data_cache/

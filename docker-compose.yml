@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "8008:8000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - EXPLORER_API_URL=${EXPLORER_API_URL:-https://api.ergoplatform.com}
+      - EXPLORER_API_KEY=${EXPLORER_API_KEY}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - blue_network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "3030:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - blue_network
+
+networks:
+  blue_network:
+    driver: bridge 

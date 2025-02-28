@@ -1,0 +1,203 @@
+/* Wind Waker-inspired color palette */
+:root {
+  --ocean-blue: #7CBDEC;
+  --deep-blue: #3A75C4;
+  --sky-blue: #ADD8E6;
+  --sand-yellow: #F5DEB3;
+  --forest-green: #228B22;
+  --hero-green: #157545;
+  --wood-brown: #8B4513; 
+  --sunset-orange: #FFA07A;
+  --dark-text: #333;
+  --light-text: #F5F5F5;
+  --island-outline: #704214;
+}
+
+/* Import pixel art font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--dark-text);
+  overflow-x: hidden;
+  /* Remove the background as we're using the PixelOcean component */
+  background-color: transparent;
+}
+
+/* Apply pixelated rendering to specific elements */
+.pixel-art, 
+.pixel-art * {
+  image-rendering: pixelated;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Pixelated buttons */
+button, 
+input[type="submit"] {
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
+  padding: 0.8rem 1rem;
+  background-color: var(--hero-green);
+  color: var(--light-text);
+  border: 3px solid var(--forest-green);
+  border-radius: 0; /* Square corners for pixel effect */
+  box-shadow: 4px 4px 0 var(--forest-green);
+  transition: all 0.2s;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  font-size: 0.8rem;
+  position: relative;
+  
+  /* Pixel border effect */
+  &::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+}
+
+button:hover,
+input[type="submit"]:hover {
+  transform: translateY(2px) translateX(2px);
+  box-shadow: 2px 2px 0 var(--forest-green);
+  
+  &::after {
+    opacity: 1;
+  }
+}
+
+button:active,
+input[type="submit"]:active {
+  transform: translateY(4px) translateX(4px);
+  box-shadow: none;
+}
+
+a {
+  color: var(--hero-green);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s;
+}
+
+a:hover {
+  text-decoration: none;
+  color: var(--forest-green);
+  
+  &::after {
+    width: 100%;
+  }
+}
+
+/* Pixel art underline effect */
+a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-image: linear-gradient(
+    to right,
+    var(--hero-green) 0%,
+    var(--hero-green) 50%,
+    transparent 50%,
+    transparent 100%
+  );
+  background-size: 4px 2px;
+  transition: width 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  color: var(--hero-green);
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  /* Add a subtle outline text effect for titles */
+  text-shadow: 2px 2px 0 var(--light-text), 
+              -2px 2px 0 var(--light-text),
+              2px -2px 0 var(--light-text),
+              -2px -2px 0 var(--light-text);
+}
+
+/* Adjust heading sizes due to pixel font */
+h1 { font-size: 2rem; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.3rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.9rem; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-blue);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--hero-green);
+  border: 2px solid var(--deep-blue);
+  border-radius: 0; /* Square corners for pixel effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--forest-green);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Additional pixel art styling for form elements */
+input, textarea, select {
+  border: 3px solid var(--hero-green);
+  padding: 0.8rem;
+  font-family: 'Roboto', sans-serif;
+  border-radius: 0; /* Square corners for pixel effect */
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--sunset-orange);
+  box-shadow: 4px 4px 0 rgba(255, 160, 122, 0.3);
+}
+
+/* Apply pixel art shadows to cards and containers */
+.pixel-shadow {
+  box-shadow: 
+    4px 0 0 0 var(--island-outline),
+    0 4px 0 0 var(--island-outline),
+    4px 4px 0 0 var(--island-outline),
+    8px 8px 0 0 rgba(0, 0, 0, 0.2);
+} 

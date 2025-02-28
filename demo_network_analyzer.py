@@ -74,7 +74,7 @@ def main():
     ]
     
     # Get analysis from LLM
-    question = "What are the key trends and insights from this network data over the past month?"
+    question = "What are the key trends and insights from this network data over the past month? This is sample data for demonstration purposes, please analyze it as if it were real data."
     analysis_result = analyze_network(
         network_stats=network_stats,
         network_events=network_events,
