@@ -1,0 +1,28 @@
+sequenceDiagram
+    participant User
+    participant UI as Operator UI
+    participant API as API Gateway
+    participant AA as AnalysisAgent
+    participant DP as DataProcessor
+    participant BI as BlockchainInterface
+    participant LLM as LLMClient
+    
+    User->>UI: Request blockchain analysis
+    Note right of User: e.g., "Analyze pair ERG/SigUSD"
+    UI->>API: Forward analysis request
+    API->>AA: Create analysis task
+    
+    AA->>DP: Fetch relevant data
+    DP->>BI: Request blockchain data
+    BI-->>DP: Return raw blockchain data
+    DP->>DP: Process and transform data
+    DP-->>AA: Return processed data
+    
+    AA->>LLM: Generate analysis
+    Note right of AA: Includes data context and analysis prompt
+    LLM->>LLM: Process data with LLM
+    LLM-->>AA: Return analysis results
+    
+    AA->>API: Return analysis results
+    API->>UI: Update UI with analysis
+    UI-->>User: Display analysis results

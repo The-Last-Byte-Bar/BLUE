@@ -1,0 +1,94 @@
+blue/
+│
+├── blockchain/
+│   ├── __init__.py
+│   ├── client.py         # Abstract base client
+│   ├── node.py           # Direct node client
+│   ├── explorer.py       # Explorer API client
+│   ├── factory.py        # Client factory
+│   └── models.py         # Blockchain data models
+│
+├── data/
+│   ├── __init__.py
+│   ├── processor.py      # Data processing core
+│   ├── blockchain_data.py # Blockchain data handlers
+│   ├── market_data.py    # Market data fetchers
+│   ├── sentiment.py      # Sentiment analysis
+│   └── social_data.py    # Social media data
+│
+├── agents/
+│   ├── __init__.py
+│   ├── framework.py      # Agent framework
+│   ├── agent.py          # Base agent class
+│   ├── trading.py        # Trading agent
+│   ├── analysis.py       # Analysis agent
+│   ├── social.py         # Social media agent
+│   └── scheduler.py      # Scheduling utilities
+│
+├── decision/
+│   ├── __init__.py
+│   ├── engine.py         # Decision engine core
+│   ├── strategy.py       # Base strategy class
+│   ├── technical.py      # Technical analysis
+│   ├── sentiment.py      # Sentiment-based strategies
+│   └── signals.py        # Signal generation
+│
+├── execution/
+│   ├── __init__.py
+│   ├── engine.py         # Execution engine
+│   ├── paper.py          # Paper trading
+│   ├── portfolio.py      # Portfolio management
+│   └── orders.py         # Order management
+│
+├── social/
+│   ├── __init__.py
+│   ├── manager.py        # Social media manager
+│   ├── bot.py            # Bot implementation
+│   ├── content.py        # Content generation
+│   └── personality.py    # Personality profiles
+│
+├── llm/
+│   ├── __init__.py
+│   ├── client.py         # Base LLM client
+│   ├── claude.py         # Claude API integration
+│   ├── ollama.py         # Ollama integration
+│   └── prompts.py        # Prompt management
+│
+├── api/
+│   ├── __init__.py
+│   ├── main.py           # FastAPI app
+│   ├── auth.py           # Authentication
+│   ├── models.py         # API data models
+│   └── routes/
+│       ├── __init__.py
+│       ├── agents.py     # Agent endpoints
+│       ├── blockchain.py # Blockchain endpoints
+│       ├── trading.py    # Trading endpoints
+│       └── social.py     # Social media endpoints
+│
+├── config/
+│   ├── __init__.py
+│   ├── settings.py       # Application settings
+│   └── logging.py        # Logging configuration
+│
+├── utils/
+│   ├── __init__.py
+│   ├── validators.py     # Data validation
+│   ├── metrics.py        # Performance metrics
+│   └── helpers.py        # Common utilities
+│
+├── tests/
+│   ├── __init__.py
+│   ├── test_blockchain.py
+│   ├── test_data.py
+│   ├── test_agents.py
+│   ├── test_decision.py
+│   ├── test_execution.py
+│   ├── test_social.py
+│   └── test_llm.py
+│
+├── main.py               # Application entry point
+├── Dockerfile            # Container definition
+├── docker-compose.yml    # Container orchestration
+├── requirements.txt      # Python dependencies
+└── .env.example          # Environment variables template

@@ -1,0 +1,236 @@
+classDiagram
+    %% Blockchain Interface Layer
+    class BlockchainClient {
+        <<abstract>>
+        +get_info() Dict
+        +get_block_by_id(block_id) Dict
+        +get_transaction_by_id(tx_id) Dict
+        +get_address_info(address) Dict
+        +get_utxos_by_address(address) List
+        +get_mempool_transactions() List
+    }
+    
+    class NodeClient {
+        -url: str
+        -headers: Dict
+        +get_info() Dict
+        +get_block_by_id(block_id) Dict
+        +get_transaction_by_id(tx_id) Dict
+        +get_address_info(address) Dict
+        +get_utxos_by_address(address) List
+        +get_mempool_transactions() List
+    }
+    
+    class ExplorerClient {
+        -url: str
+        -headers: Dict
+        +get_info() Dict
+        +get_block_by_id(block_id) Dict
+        +get_transaction_by_id(tx_id) Dict
+        +get_address_info(address) Dict
+        +get_utxos_by_address(address) List
+        +get_mempool_transactions() List
+    }
+    
+    class BlockchainClientFactory {
+        +create(client_type, config) BlockchainClient
+    }
+    
+    %% Data Processing Layer
+    class DataProcessor {
+        -blockchain_client: BlockchainClient
+        -config: Settings
+        +process_block_data(block_id) Dict
+        +process_address_data(address) Dict
+        -transform_block_data(raw_block) Dict
+        -transform_utxos(utxos) List
+        -calculate_balance(utxos) Dict
+        -extract_transaction_history(address_info) List
+    }
+    
+    class MarketDataFetcher {
+        -config: Settings
+        -price_api_url: str
+        +fetch_price_data(asset_id, vs_currency) Dict
+        +fetch_historical_prices(asset_id, days, vs_currency) List
+        -process_historical_prices(raw_data) List
+    }
+    
+    %% Agent Framework
+    class AgentFramework {
+        -config: Settings
+        -agents: Dict
+        -running: bool
+        -event_loop
+        +register_agent(agent_id, agent) str
+        +unregister_agent(agent_id)
+        +get_agent(agent_id) Agent
+        +list_agents() List
+        +start()
+        +stop()
+        +run_once(agent_id) Dict
+    }
+    
+    class Agent {
+        <<abstract>>
+        -config: Dict
+        -last_run: datetime
+        -next_run: datetime
+        -running: bool
+        -task
+        +run() Dict
+        +status() Dict
+        +start()
+        +stop()
+        -schedule_runs()
+    }
+    
+    class TradingAgent {
+        -data_processor: DataProcessor
+        -decision_engine: DecisionEngine
+        -execution_engine: ExecutionEngine
+        -portfolio: Dict
+        -history: List
+        +run() Dict
+        -gather_market_data() Dict
+        -execute_trades(signals) List
+        -update_portfolio(trade_results)
+    }
+    
+    %% Decision Engine
+    class DecisionEngine {
+        -config: Settings
+        -llm_client: LLMClient
+        -strategies: Dict
+        +register_strategy(strategy_id, strategy) str
+        +unregister_strategy(strategy_id)
+        +get_strategy(strategy_id) TradingStrategy
+        +list_strategies() List
+        +analyze(market_data) List
+        -enhance_signals_with_llm(signals, market_data) List
+        -prepare_market_data_for_llm(market_data) Dict
+    }
+    
+    class TradingStrategy {
+        <<abstract>>
+        -params: Dict
+        -enabled: bool
+        +analyze(data) List
+        +is_enabled() bool
+        +enable()
+        +disable()
+        +get_params() Dict
+        +update_params(params)
+    }
+    
+    class TechnicalStrategy {
+        +analyze(data) List
+        -calculate_indicators(df) Dict
+        -generate_signals(indicators) List
+    }
+    
+    %% LLM Integration
+    class LLMClient {
+        <<abstract>>
+        -config: Settings
+        +query(prompt, context) Dict
+    }
+    
+    class ClaudeClient {
+        -api_key: str
+        -api_url: str
+        -model: str
+        +query(prompt, context) Dict
+        -format_prompt(prompt, context) str
+        -parse_response(text) Dict
+    }
+    
+    class OllamaClient {
+        -api_url: str
+        -model: str
+        +query(prompt, context) Dict
+        -format_prompt(prompt, context) str
+        -parse_response(text) Dict
+    }
+    
+    %% Social Media Integration
+    class SocialMediaManager {
+        -bots: List
+        -platforms: List
+        +register_bot(bot)
+        +post(content, bot_id)
+        +schedule(content, bot_id, timestamp)
+        +monitor()
+    }
+    
+    class Bot {
+        -id: str
+        -personality: Dict
+        -schedule: Dict
+        +post(content)
+        +reply(post_id, content)
+        +analyze(post_id)
+    }
+    
+    class ContentGenerator {
+        -templates: List
+        -llm: LLMClient
+        +generate(prompt, context)
+        +analyze(content)
+        +summarize(content)
+    }
+    
+    %% Execution Layer
+    class ExecutionEngine {
+        -mode: str
+        -trader: Trader
+        +execute(signal) Dict
+        +cancel(order_id)
+        +status() Dict
+    }
+    
+    class PaperTrader {
+        -balance: Dict
+        -orders: List
+        +buy(pair, amount, price)
+        +sell(pair, amount, price)
+        +cancel(order_id)
+        +get_orders() List
+    }
+    
+    class Portfolio {
+        -assets: Dict
+        -value: float
+        +add_asset(asset, amount, price)
+        +remove_asset(asset, amount, price)
+        +update_value()
+        +get_history() List
+    }
+    
+    %% Relationships
+    BlockchainClient <|-- NodeClient
+    BlockchainClient <|-- ExplorerClient
+    BlockchainClientFactory ..> BlockchainClient
+    
+    Agent <|-- TradingAgent
+    AgentFramework o-- Agent
+    
+    TradingStrategy <|-- TechnicalStrategy
+    DecisionEngine o-- TradingStrategy
+    
+    LLMClient <|-- ClaudeClient
+    LLMClient <|-- OllamaClient
+    
+    SocialMediaManager o-- Bot
+    Bot o-- ContentGenerator
+    ContentGenerator o-- LLMClient
+    
+    ExecutionEngine o-- PaperTrader
+    PaperTrader o-- Portfolio
+    
+    TradingAgent o-- DataProcessor
+    TradingAgent o-- DecisionEngine
+    TradingAgent o-- ExecutionEngine
+    
+    DataProcessor o-- BlockchainClient
+    DataProcessor o-- MarketDataFetcher

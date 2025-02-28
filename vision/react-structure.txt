@@ -1,0 +1,110 @@
+frontend/
+│
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── assets/
+│
+├── src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Card.jsx
+│   │   │   ├── Table.jsx
+│   │   │   ├── Chart.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   └── Sidebar.jsx
+│   │   │
+│   │   ├── dashboard/
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── MetricsPanel.jsx
+│   │   │   ├── ActivityFeed.jsx
+│   │   │   └── PerformanceChart.jsx
+│   │   │
+│   │   ├── agents/
+│   │   │   ├── AgentList.jsx
+│   │   │   ├── AgentCard.jsx
+│   │   │   ├── AgentForm.jsx
+│   │   │   └── AgentSchedule.jsx
+│   │   │
+│   │   ├── blockchain/
+│   │   │   ├── AddressViewer.jsx
+│   │   │   ├── TransactionViewer.jsx
+│   │   │   ├── BlockExplorer.jsx
+│   │   │   └── UTXOList.jsx
+│   │   │
+│   │   ├── trading/
+│   │   │   ├── TradingTerminal.jsx
+│   │   │   ├── OrderBook.jsx
+│   │   │   ├── TradeHistory.jsx
+│   │   │   └── PairSelector.jsx
+│   │   │
+│   │   ├── portfolio/
+│   │   │   ├── PortfolioSummary.jsx
+│   │   │   ├── AssetAllocation.jsx
+│   │   │   ├── PerformanceMetrics.jsx
+│   │   │   └── TransactionList.jsx
+│   │   │
+│   │   ├── strategies/
+│   │   │   ├── StrategyList.jsx
+│   │   │   ├── StrategyEditor.jsx
+│   │   │   ├── StrategyTester.jsx
+│   │   │   └── IndicatorSelector.jsx
+│   │   │
+│   │   ├── analysis/
+│   │   │   ├── AnalysisPanel.jsx
+│   │   │   ├── MarketInsights.jsx
+│   │   │   ├── TechnicalIndicators.jsx
+│   │   │   └── SentimentAnalysis.jsx
+│   │   │
+│   │   └── social/
+│   │       ├── BotManager.jsx
+│   │       ├── BotForm.jsx
+│   │       ├── ContentScheduler.jsx
+│   │       ├── PersonalityEditor.jsx
+│   │       └── EngagementMetrics.jsx
+│   │
+│   ├── pages/
+│   │   ├── DashboardPage.jsx
+│   │   ├── AgentsPage.jsx
+│   │   ├── BlockchainPage.jsx
+│   │   ├── TradingPage.jsx
+│   │   ├── PortfolioPage.jsx
+│   │   ├── StrategiesPage.jsx
+│   │   ├── AnalysisPage.jsx
+│   │   ├── SocialPage.jsx
+│   │   └── SettingsPage.jsx
+│   │
+│   ├── services/
+│   │   ├── api.js
+│   │   ├── auth.js
+│   │   ├── websocket.js
+│   │   └── storage.js
+│   │
+│   ├── store/
+│   │   ├── index.js
+│   │   ├── reducers/
+│   │   └── actions/
+│   │
+│   ├── hooks/
+│   │   ├── useApi.js
+│   │   ├── useWebSocket.js
+│   │   └── useAgents.js
+│   │
+│   ├── utils/
+│   │   ├── formatting.js
+│   │   ├── validation.js
+│   │   ├── charts.js
+│   │   └── helpers.js
+│   │
+│   ├── assets/
+│   │   ├── styles/
+│   │   └── images/
+│   │
+│   ├── App.jsx
+│   ├── index.jsx
+│   └── routes.jsx
+│
+├── package.json
+├── tailwind.config.js
+└── vite.config.js

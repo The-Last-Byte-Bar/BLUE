@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant User
+    participant UI as Operator UI
+    participant API as API Gateway
+    participant SM as SocialMediaManager
+    participant Bot as Bot
+    participant CG as ContentGenerator
+    participant DP as DataProcessor
+    participant LLM as LLMClient
+    participant X as X Platform API
+    
+    User->>UI: Configure social media bot
+    UI->>API: Create bot request
+    API->>SM: Register new bot
+    SM->>Bot: Initialize bot with personality
+    
+    Note over Bot,SM: Bot operates on schedule
+    
+    Bot->>DP: Request market data
+    DP-->>Bot: Return market insights
+    
+    Bot->>CG: Generate content
+    CG->>LLM: Create personalized content
+    LLM-->>CG: Return generated content
+    CG-->>Bot: Return formatted content
+    
+    Bot->>X: Post content to X
+    X-->>Bot: Return post status
+    
+    Note over X,Bot: User engagement
+    X->>Bot: Notification of replies/mentions
+    Bot->>CG: Generate response
+    CG->>LLM: Create personalized response
+    LLM-->>CG: Return generated response
+    CG-->>Bot: Return formatted response
+    Bot->>X: Post response
+    
+    Bot->>SM: Report activity metrics
+    SM->>API: Update bot status
+    API->>UI: Update UI
+    UI-->>User: Display bot activity

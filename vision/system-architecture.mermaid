@@ -1,0 +1,90 @@
+flowchart TD
+    subgraph Frontend["Frontend (React)"]
+        OperatorUI["Operator UI"]
+        Dashboard["Dashboard"]
+        AgentConfig["Agent Configuration"]
+        TradeMonitor["Trade Monitor"]
+        StrategyEditor["Strategy Editor"]
+        BotManager["Social Media Bot Manager"]
+    end
+
+    subgraph Backend["Backend (Python)"]
+        API["API Gateway"]
+        
+        subgraph AgentFramework["Agent Framework"]
+            AgentManager["Agent Manager"]
+            Scheduler["Scheduler"]
+            TradingAgent["Trading Agents"]
+            AnalysisAgent["Analysis Agents"]
+            SocialAgent["Social Media Agents"]
+        end
+        
+        subgraph DecisionEngine["Decision Engine"]
+            StrategyManager["Strategy Manager"]
+            TechnicalAnalysis["Technical Analysis"]
+            SentimentAnalysis["Sentiment Analysis"]
+            SignalGenerator["Signal Generator"]
+        end
+        
+        subgraph ExecutionLayer["Execution Layer"]
+            PaperTrader["Paper Trading"]
+            Portfolio["Portfolio Management"]
+            OrderManager["Order Management"]
+        end
+        
+        subgraph DataProcessing["Data Processing"]
+            DataProcessor["Data Processor"]
+            MarketData["Market Data"]
+            SocialData["Social Media Data"]
+        end
+        
+        subgraph BlockchainInterface["Blockchain Interface"]
+            NodeClient["Node Client"]
+            ExplorerClient["Explorer Client"]
+            IndexedClient["Indexed Data Client"]
+        end
+        
+        subgraph LLMIntegration["LLM Integration"]
+            LLMClient["LLM Client"]
+            PromptManager["Prompt Manager"]
+        end
+        
+        subgraph SocialIntegration["Social Integration"]
+            SMPlatform["Social Media Platform"]
+            ContentGen["Content Generator"]
+            Engagement["Engagement Manager"]
+        end
+    end
+    
+    subgraph ExternalServices["External Services"]
+        ErgoNode["Ergo Node"]
+        Explorer["Ergo Explorer API"]
+        LLMService["Claude/Ollama"]
+        XPlatform["X (Twitter) API"]
+    end
+    
+    %% Connections
+    OperatorUI <--> API
+    API <--> AgentFramework
+    API <--> DecisionEngine
+    API <--> ExecutionLayer
+    API <--> SocialIntegration
+    
+    AgentFramework <--> DecisionEngine
+    AgentFramework <--> ExecutionLayer
+    AgentFramework <--> SocialIntegration
+    
+    DecisionEngine <--> DataProcessing
+    DecisionEngine <--> LLMIntegration
+    
+    ExecutionLayer <--> DataProcessing
+    
+    DataProcessing <--> BlockchainInterface
+    DataProcessing <--> SocialIntegration
+    
+    BlockchainInterface <--> ErgoNode
+    BlockchainInterface <--> Explorer
+    
+    LLMIntegration <--> LLMService
+    
+    SocialIntegration <--> XPlatform

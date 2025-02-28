@@ -1,0 +1,124 @@
+flowchart TB
+    classDef external fill:#e6e6e6,stroke:#999999,color:black
+    classDef core fill:#0066cc,stroke:#004c99,color:white,font-weight:bold
+    classDef module fill:#3399ff,stroke:#0073e6,color:white
+    classDef data fill:#00cc66,stroke:#009933,color:white
+    classDef ui fill:#9966ff,stroke:#7f40ff,color:white
+
+    subgraph ExternalSystems["External Systems"]
+        ErgoNode["Ergo Node"]:::external
+        ErgoExplorer["Ergo Explorer API"]:::external
+        LLMService["LLM Services\n(Claude/Ollama)"]:::external
+        MarketAPI["Market Data APIs"]:::external
+        SocialPlatforms["Social Platforms\n(X/Twitter)"]:::external
+    end
+
+    subgraph CoreSystem["BLUE Core System"]
+        subgraph Ingress["API Gateway & Auth"]
+            API["API Gateway"]:::core
+            Auth["Authentication"]:::module
+            WSG["WebSocket Gateway"]:::module
+        end
+
+        subgraph Foundation["Foundation Layer"]
+            BlockchainInterface["Blockchain Interface"]:::core
+            DataProcessing["Data Processing"]:::core
+            LLMIntegration["LLM Integration"]:::core
+            MarketData["Market Data"]:::module
+        end
+
+        subgraph Intelligence["Intelligence Layer"]
+            PromptEngine["Prompt Engine"]:::core
+            AnalysisEngine["Analysis Engine"]:::core
+            DecisionEngine["Decision Engine"]:::core
+            SentimentEngine["Sentiment Engine"]:::module
+        end
+
+        subgraph Agents["Agent Framework"]
+            AgentManager["Agent Manager"]:::core
+            Scheduler["Scheduler"]:::module
+            TradingAgents["Trading Agents"]:::module
+            AnalysisAgents["Analysis Agents"]:::module
+            SocialAgents["Social Agents"]:::module
+        end
+
+        subgraph Execution["Execution Layer"]
+            PaperTrading["Paper Trading"]:::module
+            Portfolio["Portfolio Manager"]:::module
+            OrderSystem["Order System"]:::module
+            StrategyEngine["Strategy Engine"]:::core
+        end
+
+        subgraph Content["Content Layer"]
+            ContentGenerator["Content Generator"]:::module
+            SocialConnector["Social Connector"]:::module
+            Engagement["Engagement Tracker"]:::module
+        end
+
+        subgraph Storage["Data Storage"]
+            TSDB["Time Series DB"]:::data
+            DocumentDB["Document DB"]:::data
+            Cache["Cache Layer"]:::data
+            EventLog["Event Log"]:::data
+        end
+    end
+
+    subgraph Frontend["User Interfaces"]
+        WebUI["Web Dashboard"]:::ui
+        MobileUI["Mobile Interface"]:::ui
+        CLI["Command Line Interface"]:::ui
+        Notifications["Notification System"]:::ui
+    end
+
+    %% External connections
+    ErgoNode <--> BlockchainInterface
+    ErgoExplorer <--> BlockchainInterface
+    LLMService <--> LLMIntegration
+    MarketAPI <--> MarketData
+    SocialPlatforms <--> SocialConnector
+
+    %% Internal connections - Foundation
+    BlockchainInterface --> DataProcessing
+    MarketData --> DataProcessing
+    DataProcessing <--> Storage
+    
+    %% Internal connections - Intelligence
+    DataProcessing --> AnalysisEngine
+    LLMIntegration <--> PromptEngine
+    PromptEngine --> AnalysisEngine
+    PromptEngine --> DecisionEngine
+    PromptEngine --> SentimentEngine
+    PromptEngine --> ContentGenerator
+    
+    %% Agent connections
+    AgentManager --> TradingAgents
+    AgentManager --> AnalysisAgents
+    AgentManager --> SocialAgents
+    Scheduler --> AgentManager
+    TradingAgents --> DecisionEngine
+    TradingAgents --> StrategyEngine
+    AnalysisAgents --> AnalysisEngine
+    SocialAgents --> ContentGenerator
+    
+    %% Execution connections
+    DecisionEngine --> StrategyEngine
+    StrategyEngine --> PaperTrading
+    PaperTrading --> Portfolio
+    PaperTrading --> OrderSystem
+    Portfolio --> Storage
+    
+    %% Content connections
+    AnalysisEngine --> ContentGenerator
+    ContentGenerator --> SocialConnector
+    SocialConnector --> Engagement
+    Engagement --> Storage
+    
+    %% API connections
+    Ingress <--> Foundation
+    Ingress <--> Intelligence
+    Ingress <--> Agents
+    Ingress <--> Execution
+    Ingress <--> Content
+    
+    %% Frontend connections
+    Frontend <--> Ingress

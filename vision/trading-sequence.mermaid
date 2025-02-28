@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant User
+    participant UI as Operator UI
+    participant API as API Gateway
+    participant AF as AgentFramework
+    participant TP as TradingAgent
+    participant DE as DecisionEngine
+    participant DP as DataProcessor
+    participant BI as BlockchainInterface
+    participant EE as ExecutionEngine
+    participant LLM as LLMClient
+
+    User->>UI: Configure trading agent
+    UI->>API: Create agent request
+    API->>AF: Create and register agent
+    AF->>TP: Initialize agent
+    
+    Note over TP,AF: Agent runs on schedule
+    
+    TP->>DP: Request market data
+    DP->>BI: Fetch blockchain data
+    BI-->>DP: Return blockchain data
+    DP->>DP: Process blockchain data
+    DP-->>TP: Return processed data
+    
+    TP->>DE: Analyze data
+    DE->>DE: Apply trading strategies
+    DE->>LLM: Enhance signals (optional)
+    LLM-->>DE: Return enhanced signals
+    DE-->>TP: Return trading signals
+    
+    TP->>EE: Execute trades based on signals
+    EE->>EE: Update portfolio
+    EE-->>TP: Return execution results
+    
+    TP->>AF: Report execution status
+    AF->>API: Update agent status
+    API->>UI: Update UI
+    UI-->>User: Display results
